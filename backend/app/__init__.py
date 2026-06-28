@@ -1,0 +1,1 @@
+"""GHOSTWIRE backend application package."""

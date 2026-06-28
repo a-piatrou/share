@@ -1,0 +1,50 @@
+[
+  {
+    "employee_id": "E001",
+    "name": "Ava Nakamura",
+    "skills": ["Python", "FastAPI", "PostgreSQL", "RAG", "Weaviate", "Backend Architecture"],
+    "availability": "available",
+    "cv_text": "Senior backend engineer with 9 years building Python services. Designed FastAPI + PostgreSQL platforms and a production RAG system over a vector database. Strong on data modelling, async I/O, and API contracts. Mentors junior engineers and owns service reliability.",
+    "project_history": ["Led the retrieval platform for a fintech search product", "Built an async ingestion pipeline handling 50M documents", "Owned the API gateway rewrite that cut p95 latency in half"]
+  },
+  {
+    "employee_id": "E002",
+    "name": "Diego Fuentes",
+    "skills": ["React", "TypeScript", "Vite", "Tailwind", "Frontend Architecture", "Accessibility"],
+    "availability": "available",
+    "cv_text": "Frontend engineer with 7 years in React and TypeScript. Built design systems with Tailwind and shadcn/ui, and accessible dashboards used by enterprise clients. Comfortable owning the whole client stack from build tooling to component libraries.",
+    "project_history": ["Built the internal analytics dashboard used by 400 staff", "Created a reusable component library adopted across 6 teams", "Led the migration from CRA to Vite"]
+  },
+  {
+    "employee_id": "E003",
+    "name": "Priya Mehta",
+    "skills": ["Machine Learning", "NLP", "Python", "Embeddings", "Evaluation", "Prompt Engineering"],
+    "availability": "partially_available",
+    "cv_text": "Applied ML engineer focused on NLP and retrieval-augmented generation. Built embedding pipelines and faithfulness evaluation harnesses. Pragmatic about shipping models and measuring grounding quality. Calm under pressure and rigorous about evaluation.",
+    "project_history": ["Built the groundedness eval suite for a customer-support assistant", "Tuned a hybrid search ranker that lifted recall by 18 points", "Stood up an offline model evaluation pipeline"]
+  },
+  {
+    "employee_id": "E004",
+    "name": "Tomasz Wójcik",
+    "skills": ["DevOps", "GCP", "Terraform", "Docker", "Kubernetes", "CI/CD"],
+    "availability": "available",
+    "cv_text": "Platform and DevOps engineer with deep GCP experience. Writes Terraform for Cloud Run, Cloud SQL, and VPC networking, and runs container platforms on Kubernetes. Obsessed with reproducible builds and least-privilege IAM.",
+    "project_history": ["Migrated a monolith to Cloud Run with private-IP Cloud SQL", "Built the org's Terraform module library", "Set up the CI/CD pipeline with ephemeral preview environments"]
+  },
+  {
+    "employee_id": "E005",
+    "name": "Sarah Okonkwo",
+    "skills": ["Product Management", "Stakeholder Management", "Roadmapping", "Discovery", "Agile"],
+    "availability": "available",
+    "cv_text": "Product manager with 8 years shipping B2B SaaS. Strong at discovery, stakeholder alignment, and translating ambiguous client needs into scoped roadmaps. Trusted facilitator who keeps cross-functional teams pointed at outcomes.",
+    "project_history": ["Owned the roadmap for a multi-tenant compliance product", "Ran discovery for a new analytics line that became 30% of revenue", "Facilitated quarterly planning across 5 squads"]
+  },
+  {
+    "employee_id": "E006",
+    "name": "Liang Chen",
+    "skills": ["Python", "Data Engineering", "Airflow", "PostgreSQL", "ETL", "Spark"],
+    "availability": "unavailable",
+    "cv_text": "Data engineer with 6 years building batch and streaming pipelines. Strong SQL and Python, orchestrates with Airflow, and has scaled ETL on Spark. Currently fully allocated to a long-running data-platform migration.",
+    "project_history": ["Built the warehouse ingestion layer for a retail analytics platform", "Migrated nightly batch jobs to Airflow with full lineage", "Optimised a Spark pipeline to cut runtime by 40%"]
+  }
+]

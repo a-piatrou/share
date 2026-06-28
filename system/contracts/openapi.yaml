@@ -1,0 +1,249 @@
+openapi: 3.1.0
+info:
+  title: GHOSTWIRE API
+  version: "1.0.0"
+  description: >
+    Frozen cross-module HTTP contract (contract_version 1). Feature worktrees build strictly
+    against this. Response bodies mirror system/contracts/schemas/*.json. All non-public
+    endpoints require RBAC (bearer); the public chatbot is restricted to the PII-free tenant.
+servers:
+  - url: http://localhost:8000
+    description: Local docker-compose
+security:
+  - bearerAuth: []
+paths:
+  /health:
+    get:
+      summary: Liveness/readiness
+      security: []
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                required: [status]
+                properties:
+                  status: { type: string, enum: [ok] }
+                  version: { type: string }
+  /chat/query:
+    post:
+      summary: Public RAG chatbot query (grounded answers only, <2s, abstains below threshold)
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [query]
+              properties:
+                query: { type: string }
+                session_id: { type: string }
+      responses:
+        "200":
+          description: Grounded answer or abstention
+          headers:
+            X-Trace-Id: { $ref: "#/components/headers/TraceId" }
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/RAGAnswer" }
+  /feedback/analyze:
+    post:
+      summary: Feedback Intelligence — analyze a review set (internal; RBAC required)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [employee_id, reviews]
+              properties:
+                employee_id: { type: string }
+                reviews:
+                  type: array
+                  items:
+                    type: object
+                    additionalProperties: false
+                    required: [review_id, kind, text]
+                    properties:
+                      review_id: { type: string }
+                      kind: { type: string, enum: [peer, manager, self] }
+                      text: { type: string }
+      responses:
+        "200":
+          description: Structured feedback analysis
+          headers:
+            X-Trace-Id: { $ref: "#/components/headers/TraceId" }
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/FeedbackAnalysis" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /team/assemble:
+    post:
+      summary: AI Team Assembler — analyze project, score candidates, assemble team (internal; RBAC)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [project_description]
+              properties:
+                project_description: { type: string }
+                requirements: { type: array, items: { type: string } }
+                constraints:
+                  type: object
+                  additionalProperties: false
+                  properties:
+                    timeline: { type: string }
+                    budget: { type: string }
+                    timezone: { type: string }
+      responses:
+        "200":
+          description: Assembled team with explanations
+          headers:
+            X-Trace-Id: { $ref: "#/components/headers/TraceId" }
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/TeamAssembly" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+  headers:
+    TraceId:
+      description: >
+        Correlates this decision to its append-only AuditRow (retrieved_chunk_ids, model_version,
+        grounding_score). The Phase-3 runtime gate uses it for AC-1 citation-resolution. Set by
+        the API envelope, not by the LLM output.
+      schema: { type: string }
+  responses:
+    Forbidden:
+      description: RBAC denied for this principal/tenant
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required: [detail]
+            properties:
+              detail: { type: string }
+  schemas:
+    RAGAnswer:
+      type: object
+      additionalProperties: false
+      required: [answer, citations, intent, confidence, abstained]
+      properties:
+        answer: { type: string }
+        citations:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            required: [source_id, snippet]
+            properties:
+              source_id: { type: string }
+              snippet: { type: string }
+        intent: { type: string, enum: [client, candidate, unknown] }
+        confidence: { type: number }
+        abstained: { type: boolean }
+    FeedbackAnalysis:
+      type: object
+      additionalProperties: false
+      required: [analysis_id, employee_id, feedback_score, sentiment, strengths, weaknesses, risks, team_dynamics_signals, confidence_score]
+      properties:
+        analysis_id: { type: string }
+        employee_id: { type: string }
+        feedback_score: { type: number, description: "[0,1] deterministic behavioral scalar" }
+        sentiment: { type: number, description: "[-1,1]" }
+        strengths: { $ref: "#/components/schemas/EvidencedItems" }
+        weaknesses: { $ref: "#/components/schemas/EvidencedItems" }
+        risks:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            required: [type, text, severity, evidence_ref]
+            properties:
+              type: { type: string, enum: [burnout, conflict, attrition, performance, other] }
+              text: { type: string }
+              severity: { type: string, enum: [low, medium, high] }
+              evidence_ref: { $ref: "#/components/schemas/EvidenceRef" }
+        team_dynamics_signals: { $ref: "#/components/schemas/EvidencedItems" }
+        confidence_score: { type: number }
+    TeamAssembly:
+      type: object
+      additionalProperties: false
+      required: [team, gaps, risks, alternatives, rationale]
+      properties:
+        team:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            required: [employee_id, role, match_score, feedback_signal_ref, rationale]
+            properties:
+              employee_id: { type: string }
+              role: { type: string }
+              match_score: { type: number }
+              feedback_signal_ref:
+                type: object
+                additionalProperties: false
+                required: [source, signal]
+                properties:
+                  source: { type: string }
+                  signal: { type: string }
+              rationale: { type: string }
+        gaps:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            required: [skill, severity]
+            properties:
+              skill: { type: string }
+              severity: { type: string, enum: [low, medium, high] }
+        risks:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            required: [text, severity]
+            properties:
+              text: { type: string }
+              severity: { type: string, enum: [low, medium, high] }
+        alternatives:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            required: [employee_id, role, match_score]
+            properties:
+              employee_id: { type: string }
+              role: { type: string }
+              match_score: { type: number }
+        rationale: { type: string }
+    EvidenceRef:
+      type: object
+      additionalProperties: false
+      required: [review_id, quote]
+      properties:
+        review_id: { type: string }
+        quote: { type: string }
+    EvidencedItems:
+      type: array
+      items:
+        type: object
+        additionalProperties: false
+        required: [text, evidence_ref]
+        properties:
+          text: { type: string }
+          evidence_ref: { $ref: "#/components/schemas/EvidenceRef" }

@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ghostwire://schemas/feedback_analysis",
+  "title": "FeedbackAnalysis",
+  "description": "Feedback Intelligence Engine output. Every item carries an evidence_ref so AC-2 (anti-generic) is structural. analysis_id is the resolvable record id team feedback_signal_ref.source points at (AC-3). feedback_score is the DETERMINISTIC behavioral scalar the team scorer consumes (NOT confidence_score).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["analysis_id", "employee_id", "feedback_score", "sentiment", "strengths", "weaknesses", "risks", "team_dynamics_signals", "confidence_score"],
+  "properties": {
+    "analysis_id": { "type": "string", "description": "Resolvable id; team_assembly feedback_signal_ref.source must equal this." },
+    "employee_id": { "type": "string" },
+    "feedback_score": { "type": "number", "description": "[0,1] deterministic behavioral fitness; AC-3 mutation test asserts this moves with feedback content." },
+    "sentiment": { "type": "number", "description": "[-1,1] overall sentiment." },
+    "strengths": { "$ref": "#/$defs/evidenced_items" },
+    "weaknesses": { "$ref": "#/$defs/evidenced_items" },
+    "risks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type", "text", "severity", "evidence_ref"],
+        "properties": {
+          "type": { "type": "string", "enum": ["burnout", "conflict", "attrition", "performance", "other"] },
+          "text": { "type": "string" },
+          "severity": { "type": "string", "enum": ["low", "medium", "high"] },
+          "evidence_ref": { "$ref": "#/$defs/evidence_ref" }
+        }
+      }
+    },
+    "team_dynamics_signals": { "$ref": "#/$defs/evidenced_items" },
+    "confidence_score": { "type": "number", "description": "Overall confidence in [0,1]." }
+  },
+  "$defs": {
+    "evidence_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["review_id", "quote"],
+      "description": "Pointer to a specific input review and the verbatim quote that supports the item.",
+      "properties": {
+        "review_id": { "type": "string" },
+        "quote": { "type": "string" }
+      }
+    },
+    "evidenced_items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["text", "evidence_ref"],
+        "properties": {
+          "text": { "type": "string" },
+          "evidence_ref": { "$ref": "#/$defs/evidence_ref" }
+        }
+      }
+    }
+  }
+}

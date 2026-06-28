@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ghostwire://schemas/rag_answer",
+  "title": "RAGAnswer",
+  "description": "Public chatbot grounded answer. Structured-output-safe (no numeric/length constraints, additionalProperties:false). The '>=1 citation when substantive, else abstained=true' rule is enforced by acceptance check AC-1, not by this schema.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["answer", "citations", "intent", "confidence", "abstained"],
+  "properties": {
+    "answer": {
+      "type": "string",
+      "description": "The answer text, grounded ONLY in provided context. Empty/short when abstained=true."
+    },
+    "citations": {
+      "type": "array",
+      "description": "Sources grounding the answer. Each source_id MUST resolve to a chunk actually returned by KnowledgeCore.semantic_search for this query (verified at runtime gate, not just presence).",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source_id", "snippet"],
+        "properties": {
+          "source_id": { "type": "string" },
+          "snippet": { "type": "string" }
+        }
+      }
+    },
+    "intent": {
+      "type": "string",
+      "enum": ["client", "candidate", "unknown"],
+      "description": "Detected audience intent."
+    },
+    "confidence": {
+      "type": "number",
+      "description": "Model self-reported grounding confidence in [0,1]."
+    },
+    "abstained": {
+      "type": "boolean",
+      "description": "true when context is insufficient to answer faithfully; answer must then ask for clarification rather than guess."
+    }
+  }
+}

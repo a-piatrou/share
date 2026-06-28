@@ -1,0 +1,28 @@
+# Secrets — NEVER commit (holds the OAuth token)
+.env
+.env.*
+!.env.example
+
+# Worktree isolation scratch (parallel writers)
+.claude/worktrees/
+
+# Build-event trail (machine log)
+system/sdlc/build-events.log
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.uv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Node / frontend
+node_modules/
+dist/
+.vite/
+
+# OS / editor
+.DS_Store

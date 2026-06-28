@@ -1,0 +1,60 @@
+# GHOSTWIRE local datastores. Embeddings run in the t2v-transformers sidecar
+# (sentence-transformers/all-MiniLM-L6-v2, dim 384) — NOT in the backend venv.
+# The backend connects to these from the host (see backend/.env.example).
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ghostwire
+      POSTGRES_PASSWORD: ghostwire
+      POSTGRES_DB: ghostwire
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ghostwire -d ghostwire"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  t2v-transformers:
+    # Same model Weaviate uses to vectorize; the app's EmbeddingService also calls
+    # this container's POST /vectors endpoint (384-dim vectors).
+    image: cr.weaviate.io/semitechnologies/transformers-inference:sentence-transformers-all-MiniLM-L6-v2
+    environment:
+      ENABLE_CUDA: "0"
+    ports:
+      - "9090:8080"
+    healthcheck:
+      # The transformers-inference image has no wget/curl but ships python3 (uvicorn app).
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/.well-known/ready')"]
+      interval: 5s
+      timeout: 5s
+      retries: 40
+      start_period: 60s
+
+  weaviate:
+    image: cr.weaviate.io/semitechnologies/weaviate:1.28.2
+    ports:
+      - "8080:8080"
+      - "50051:50051"
+    environment:
+      QUERY_DEFAULTS_LIMIT: "25"
+      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: "true"
+      PERSISTENCE_DATA_PATH: "/var/lib/weaviate"
+      DEFAULT_VECTORIZER_MODULE: "text2vec-transformers"
+      ENABLE_MODULES: "text2vec-transformers"
+      TRANSFORMERS_INFERENCE_API: "http://t2v-transformers:8080"
+      CLUSTER_HOSTNAME: "node1"
+    volumes:
+      - weaviate_data:/var/lib/weaviate
+    depends_on:
+      t2v-transformers:
+        condition: service_healthy
+    # No container healthcheck (image lacks wget); readiness is polled from the host
+    # against http://localhost:8080/v1/.well-known/ready.
+
+volumes:
+  pgdata:
+  weaviate_data:

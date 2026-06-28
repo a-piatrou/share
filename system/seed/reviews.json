@@ -1,0 +1,110 @@
+[
+  {
+    "review_id": "R001",
+    "employee_id": "E001",
+    "kind": "manager",
+    "text": "Ava is one of the strongest engineers on the team. She consistently delivers robust backend designs and her API contracts are clear and well documented. She mentors juniors patiently and raises the quality bar for everyone around her. No concerns about workload or attitude; she is reliable and collaborative."
+  },
+  {
+    "review_id": "R002",
+    "employee_id": "E001",
+    "kind": "peer",
+    "text": "Working with Ava is a pleasure. She explains tradeoffs clearly and is always willing to pair. Her code reviews are thorough and constructive. If anything she could delegate more so she is not a bottleneck, but she is a genuine force-multiplier on the team."
+  },
+  {
+    "review_id": "R003",
+    "employee_id": "E001",
+    "kind": "self",
+    "text": "I am proud of the retrieval platform work this year. I want to grow into more architecture ownership and improve at delegating so I do not become a single point of failure. Overall I feel energised and well supported."
+  },
+  {
+    "review_id": "R004",
+    "employee_id": "E002",
+    "kind": "manager",
+    "text": "Diego ships high-quality frontend work and cares deeply about accessibility and craft. He is dependable and communicates well with design. One area to watch: he can be reluctant to push back on scope, which occasionally leads to late nights near deadlines. Overall a strong, steady contributor."
+  },
+  {
+    "review_id": "R005",
+    "employee_id": "E002",
+    "kind": "peer",
+    "text": "Diego is great to collaborate with and always unblocks others on the client stack. He is generous with his time. Sometimes he takes on too much himself instead of asking for help."
+  },
+  {
+    "review_id": "R006",
+    "employee_id": "E002",
+    "kind": "self",
+    "text": "I delivered the component library and the dashboard this year. I want to get better at saying no to scope creep and protecting my time. I feel positive about the team but stretched thin some sprints."
+  },
+  {
+    "review_id": "R007",
+    "employee_id": "E003",
+    "kind": "manager",
+    "text": "Priya is exceptionally rigorous about evaluation and grounding quality. Her ML work is pragmatic and she measures everything. She is calm under pressure and a steady technical voice. A genuine strength is turning fuzzy quality goals into concrete metrics."
+  },
+  {
+    "review_id": "R008",
+    "employee_id": "E003",
+    "kind": "peer",
+    "text": "Priya is brilliant and patient when explaining models. She is a strong collaborator. She is only partially available right now which sometimes slows down reviews that depend on her, but the quality is always worth it."
+  },
+  {
+    "review_id": "R009",
+    "employee_id": "E003",
+    "kind": "self",
+    "text": "I shipped the eval suite and the ranker improvements. I enjoy the work and feel motivated. My main constraint is being split across two projects, which limits how much I can take on."
+  },
+  {
+    "review_id": "R010",
+    "employee_id": "E004",
+    "kind": "manager",
+    "text": "Tomasz is a solid platform engineer with excellent GCP and Terraform skills. Recently he has shown clear signs of burnout: he has been on call for three months straight, working long hours, and his tone in reviews has become short and irritable. The work is still good but I am worried about his sustainability and we need to rebalance the on-call rotation."
+  },
+  {
+    "review_id": "R011",
+    "employee_id": "E004",
+    "kind": "peer",
+    "text": "Tomasz knows the infrastructure better than anyone. Lately there has been some friction in standups; he and another engineer have clashed over deployment ownership and it has gotten tense. He is exhausted and it shows. When rested he is fantastic to work with."
+  },
+  {
+    "review_id": "R012",
+    "employee_id": "E004",
+    "kind": "self",
+    "text": "Honestly I am running on empty. The on-call load has been relentless and I have had some conflict with a teammate about who owns the deploy pipeline. I need a break and clearer boundaries. The technical work itself is going fine."
+  },
+  {
+    "review_id": "R013",
+    "employee_id": "E005",
+    "kind": "manager",
+    "text": "Sarah is an outstanding product manager. Stakeholders trust her, she runs crisp discovery, and she keeps teams aligned on outcomes. She handles ambiguity gracefully and is a calming presence in planning. No risks; she is a role model for the craft."
+  },
+  {
+    "review_id": "R014",
+    "employee_id": "E005",
+    "kind": "peer",
+    "text": "Sarah is the best facilitator I have worked with. She makes meetings productive and protects the team from thrash. She is collaborative and decisive. I have no constructive criticism beyond wishing we had two of her."
+  },
+  {
+    "review_id": "R015",
+    "employee_id": "E005",
+    "kind": "self",
+    "text": "I am energised by the discovery work and proud of the roadmap outcomes this year. I want to deepen my data literacy to challenge engineering estimates better. Team morale feels healthy and I feel well supported."
+  },
+  {
+    "review_id": "R016",
+    "employee_id": "E006",
+    "kind": "manager",
+    "text": "Liang is a capable data engineer with strong SQL and pipeline skills. Performance has dipped this quarter: a few deadlines slipped and there were quality issues in the migration that required rework. He has also seemed disengaged in meetings. He is fully allocated and may be stretched, but the recent delivery and attrition-risk signals are a concern we are actively managing."
+  },
+  {
+    "review_id": "R017",
+    "employee_id": "E006",
+    "kind": "peer",
+    "text": "Liang knows the data platform well but has been hard to reach lately and slow to respond on the migration. A couple of handoffs were missed which created friction. When he engages the work is solid, but the inconsistency has been frustrating for the team."
+  },
+  {
+    "review_id": "R018",
+    "employee_id": "E006",
+    "kind": "self",
+    "text": "This migration has been a grind and I have been fully allocated to it with no slack. A few deadlines slipped and I know some rework was needed. I am frankly disengaged and have been wondering whether this is the right role for me long term."
+  }
+]

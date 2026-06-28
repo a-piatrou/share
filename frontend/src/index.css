@@ -1,0 +1,105 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply bg-gw-bg text-gw-text;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply min-h-screen font-sans;
+  }
+
+  * {
+    @apply border-gw-border;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-gw-surface;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gw-muted rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gw-subtle;
+  }
+}
+
+@layer components {
+  .gw-card {
+    @apply bg-gw-surface border border-gw-border rounded-xl p-5;
+  }
+
+  .gw-badge {
+    @apply inline-flex items-center px-2 py-0.5 rounded text-2xs font-mono font-medium uppercase tracking-wider;
+  }
+
+  .gw-badge-teal {
+    @apply gw-badge bg-gw-teal-dim text-gw-teal;
+  }
+
+  .gw-badge-amber {
+    @apply gw-badge bg-amber-900/40 text-amber-400;
+  }
+
+  .gw-badge-crimson {
+    @apply gw-badge bg-red-900/40 text-red-400;
+  }
+
+  .gw-badge-green {
+    @apply gw-badge bg-green-900/40 text-gw-green;
+  }
+
+  .gw-badge-muted {
+    @apply gw-badge bg-gw-muted text-gw-subtle;
+  }
+
+  .gw-input {
+    @apply w-full bg-gw-bg border border-gw-border rounded-lg px-3 py-2 text-sm text-gw-text placeholder-gw-subtle
+           focus:outline-none focus:ring-1 focus:ring-gw-teal focus:border-gw-teal transition-colors;
+  }
+
+  .gw-textarea {
+    @apply gw-input resize-none;
+  }
+
+  .gw-btn-primary {
+    @apply inline-flex items-center gap-2 px-4 py-2 bg-gw-teal text-gw-bg rounded-lg text-sm font-semibold
+           hover:bg-teal-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors;
+  }
+
+  .gw-btn-secondary {
+    @apply inline-flex items-center gap-2 px-4 py-2 bg-gw-muted text-gw-text rounded-lg text-sm font-medium
+           hover:bg-gw-border disabled:opacity-40 disabled:cursor-not-allowed transition-colors;
+  }
+
+  .gw-label {
+    @apply block text-xs font-medium text-gw-subtle uppercase tracking-wider mb-1.5;
+  }
+
+  .gw-section-title {
+    @apply text-xs font-mono font-medium text-gw-subtle uppercase tracking-widest mb-3;
+  }
+
+  .evidence-tag {
+    @apply inline-flex items-center gap-1 px-1.5 py-0.5 bg-gw-muted rounded text-2xs font-mono text-gw-subtle
+           border border-gw-border cursor-default;
+  }
+
+  .severity-high {
+    @apply text-red-400;
+  }
+  .severity-medium {
+    @apply text-amber-400;
+  }
+  .severity-low {
+    @apply text-gw-green;
+  }
+}

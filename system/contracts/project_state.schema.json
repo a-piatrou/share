@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ghostwire://contracts/project_state",
+  "title": "project_state",
+  "description": "The single source of truth the dev-agents read for intent and the lead patches as the build progresses. Produced ONCE by the task-normalizer from the prose spec, then maintained as a live ledger. Committed per green node so an OAuth-window interruption resumes from disk.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["project_meta", "contract_version", "modules", "requirements", "interface_contracts", "output_schemas", "acceptance_criteria", "verify"],
+  "properties": {
+    "project_meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "spec_source", "target", "vector_db"],
+      "properties": {
+        "name": { "type": "string" },
+        "spec_source": { "type": "string", "description": "Path to the prose spec parsed once." },
+        "target": { "type": "string", "enum": ["local-docker-compose", "gcp"], "description": "Resolved deployment target." },
+        "vector_db": { "type": "string", "enum": ["weaviate", "pinecone"] }
+      }
+    },
+    "contract_version": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Monotonic. A bump signals all dependent modules to re-pull contracts and re-run verify. >2-3 bumps after freeze => collapse to serial (the freeze was a fiction)."
+    },
+    "modules": {
+      "type": "array",
+      "description": "One entry per build unit. status/verify_status are the live ledger fields the owner patches; everything else is contract-owned.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "owner", "depends_on", "status", "verify_status", "worktree"],
+        "properties": {
+          "id": { "type": "string", "enum": ["knowledge_core", "shared_security", "chatbot", "feedback", "team_assembler", "frontend"] },
+          "owner": { "type": "string", "description": "Subagent type responsible." },
+          "depends_on": { "type": "array", "items": { "type": "string" } },
+          "status": { "type": "string", "enum": ["planned", "in_progress", "done", "blocked", "failed"] },
+          "verify_status": { "type": "string", "enum": ["unknown", "tier1_green", "tier2_green", "red"] },
+          "worktree": { "type": "string", "description": "Worktree branch/path or 'base' for serial nodes." },
+          "last_commit": { "type": "string", "description": "Git SHA of the last green checkpoint for this module." }
+        }
+      }
+    },
+    "requirements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "statement", "type", "module", "priority"],
+        "properties": {
+          "id": { "type": "string", "description": "REQ-###" },
+          "statement": { "type": "string" },
+          "type": { "type": "string", "enum": ["functional", "nfr", "constraint"] },
+          "module": { "type": "string" },
+          "priority": { "type": "string", "enum": ["mvp", "later"] },
+          "source_quote": { "type": "string" },
+          "acceptance_criteria_ids": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "interface_contracts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["openapi_path", "shared_interfaces"],
+      "properties": {
+        "openapi_path": { "type": "string", "description": "Committed OpenAPI 3.1 doc for every cross-module HTTP boundary." },
+        "shared_interfaces": {
+          "type": "array",
+          "description": "The non-negotiable shared brain interfaces, frozen first. RBAC auth-context + audit-row schema are frozen here too, not just happy-path shapes.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "stub_path", "signature"],
+            "properties": {
+              "name": { "type": "string", "description": "Frozen interface / accessor / constant name." },
+              "stub_path": { "type": "string" },
+              "signature": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "output_schemas": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rag_answer", "feedback_analysis", "team_assembly"],
+      "properties": {
+        "rag_answer": { "type": "string" },
+        "feedback_analysis": { "type": "string" },
+        "team_assembly": { "type": "string" }
+      }
+    },
+    "acceptance_criteria": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "description", "kind", "verdict_on_fail", "modules"],
+        "properties": {
+          "id": { "type": "string", "description": "AC-#" },
+          "description": { "type": "string" },
+          "kind": { "type": "string", "enum": ["static", "runtime", "judge"] },
+          "verdict_on_fail": { "type": "string", "enum": ["automatic-fail", "warn"] },
+          "modules": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "open_contract_proposals": {
+      "type": "array",
+      "description": "Proposed contract changes from feature agents; only the contract-lead may accept (and bump contract_version).",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["by", "change", "status"],
+        "properties": {
+          "by": { "type": "string" },
+          "change": { "type": "string" },
+          "status": { "type": "string", "enum": ["open", "accepted", "rejected"] },
+          "resolution": { "type": "string" }
+        }
+      }
+    },
+    "verify": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["command", "tier1", "tier2"],
+      "properties": {
+        "command": { "type": "string", "description": "Single entrypoint each worktree runs on itself, e.g. 'make verify'." },
+        "tier1": { "type": "array", "items": { "type": "string" }, "description": "Deterministic gate steps." },
+        "tier2": { "type": "array", "items": { "type": "string" }, "description": "Semantic-critic steps (gated behind tier1 green; hard attempt cap)." }
+      }
+    },
+    "glossary": { "type": "object", "additionalProperties": { "type": "string" } }
+  }
+}

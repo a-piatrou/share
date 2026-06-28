@@ -1,0 +1,16 @@
+[
+  {
+    "project_id": "PROJ-001",
+    "title": "Grounded RAG Knowledge Assistant",
+    "description": "Build a retrieval-augmented knowledge assistant for an enterprise client. The system must answer questions only from a curated corpus, cite its sources, and abstain when it lacks grounding. Backend in Python/FastAPI over PostgreSQL with a vector search layer; a small React UI; deployed on GCP.",
+    "required_skills": ["Python", "FastAPI", "RAG", "PostgreSQL", "Weaviate", "React", "GCP"],
+    "constraints": { "timeline": "10 weeks", "budget": "medium", "timezone": "EU" }
+  },
+  {
+    "project_id": "PROJ-002",
+    "title": "Data Platform Modernization on GCP",
+    "description": "Modernize a client's batch data platform. Re-platform ETL pipelines, add lineage and orchestration, and move infrastructure to GCP with Terraform. Needs strong data engineering plus DevOps, with product oversight to keep stakeholders aligned on phased delivery.",
+    "required_skills": ["Data Engineering", "Airflow", "ETL", "GCP", "Terraform", "DevOps", "Product Management"],
+    "constraints": { "timeline": "14 weeks", "budget": "high", "timezone": "EU" }
+  }
+]

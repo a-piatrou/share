@@ -1,0 +1,85 @@
+{
+  "project_meta": {
+    "name": "GHOSTWIRE",
+    "spec_source": "initial-ghostwire-task-description.md",
+    "target": "local-docker-compose",
+    "vector_db": "weaviate"
+  },
+  "contract_version": 1,
+  "modules": [
+    { "id": "shared_security", "owner": "knowledge-core-builder", "depends_on": [], "status": "done", "verify_status": "tier1_green", "worktree": "base", "last_commit": "9d41316da7eba1711bcaab4bf0dd19e65b46b462" },
+    { "id": "knowledge_core", "owner": "knowledge-core-builder", "depends_on": ["shared_security"], "status": "done", "verify_status": "tier1_green", "worktree": "base", "last_commit": "9d41316da7eba1711bcaab4bf0dd19e65b46b462" },
+    { "id": "chatbot", "owner": "chatbot-builder", "depends_on": ["knowledge_core", "shared_security"], "status": "done", "verify_status": "tier1_green", "worktree": "base", "last_commit": "6173064" },
+    { "id": "feedback", "owner": "feedback-builder", "depends_on": ["knowledge_core", "shared_security"], "status": "done", "verify_status": "tier1_green", "worktree": "base", "last_commit": "6173064" },
+    { "id": "team_assembler", "owner": "team-assembler-builder", "depends_on": ["knowledge_core", "shared_security", "feedback"], "status": "done", "verify_status": "tier1_green", "worktree": "base", "last_commit": "12a47d6" },
+    { "id": "frontend", "owner": "frontend-builder", "depends_on": [], "status": "done", "verify_status": "tier1_green", "worktree": "base", "last_commit": "87e6543" }
+  ],
+  "requirements": [
+    { "id": "REQ-001", "statement": "A shared Knowledge Core provides semantic_search and embedding over Weaviate (vector) + PostgreSQL (structured), and is the single brain all features depend on.", "type": "functional", "module": "knowledge_core", "priority": "mvp", "source_quote": "One brain, multiple interfaces. ... All features depend on it.", "acceptance_criteria_ids": ["AC-4"] },
+    { "id": "REQ-002", "statement": "EmployeeIntelligenceProfile unifies CV data, skills, feedback summaries, and project history.", "type": "functional", "module": "knowledge_core", "priority": "mvp", "source_quote": "Unified model combining: CV data, Skills, Feedback summaries, Project history", "acceptance_criteria_ids": [] },
+    { "id": "REQ-003", "statement": "Public RAG chatbot answers client and candidate queries using only retrieved context.", "type": "functional", "module": "chatbot", "priority": "mvp", "source_quote": "Public-facing AI agent (clients + candidates) ... Generate response via Claude", "acceptance_criteria_ids": ["AC-1", "AC-5"] },
+    { "id": "REQ-004", "statement": "Chatbot response time is under 2 seconds.", "type": "nfr", "module": "chatbot", "priority": "mvp", "source_quote": "Response time < 2s", "acceptance_criteria_ids": [] },
+    { "id": "REQ-005", "statement": "Chatbot never hallucinates: grounded answers only; abstain when grounding is insufficient.", "type": "constraint", "module": "chatbot", "priority": "mvp", "source_quote": "Grounded answers only (no hallucinations) ... Never hallucinate capabilities ... If unsure -> ask clarification", "acceptance_criteria_ids": ["AC-1"] },
+    { "id": "REQ-006", "statement": "Chatbot detects intent (client vs candidate) and routes context retrieval accordingly.", "type": "functional", "module": "chatbot", "priority": "mvp", "source_quote": "Intent detection (client vs. candidate)", "acceptance_criteria_ids": [] },
+    { "id": "REQ-007", "statement": "Feedback Intelligence Engine turns peer/manager/self reviews into structured strengths, weaknesses, risks (burnout/conflict), and team-dynamics signals, each with evidence.", "type": "functional", "module": "feedback", "priority": "mvp", "source_quote": "Analyze performance feedback and extract: strengths, weaknesses, behavioral signals, risks", "acceptance_criteria_ids": ["AC-2", "AC-5"] },
+    { "id": "REQ-008", "statement": "AI Team Assembler analyzes a project then scores candidates and assembles a team (basic matching for MVP).", "type": "functional", "module": "team_assembler", "priority": "mvp", "source_quote": "Basic team matching (no optimization yet)", "acceptance_criteria_ids": ["AC-5"] },
+    { "id": "REQ-009", "statement": "Team scoring uses behavioral/feedback signals derived from the Feedback Intelligence Engine.", "type": "functional", "module": "team_assembler", "priority": "mvp", "source_quote": "Team selection ignores behavioral data => fail; Data Used: Feedback intelligence", "acceptance_criteria_ids": ["AC-3"] },
+    { "id": "REQ-010", "statement": "System is GDPR compliant; sensitive employee data stays in-VPC and is minimized in prompts/logs.", "type": "nfr", "module": "shared_security", "priority": "mvp", "source_quote": "GDPR compliant (critical)", "acceptance_criteria_ids": [] },
+    { "id": "REQ-011", "statement": "Role-based access control at the API layer AND the retrieval layer (principal -> Weaviate tenant).", "type": "nfr", "module": "shared_security", "priority": "mvp", "source_quote": "Role-based access control", "acceptance_criteria_ids": [] },
+    { "id": "REQ-012", "statement": "Append-only audit logs for every AI decision, keyed by trace_id.", "type": "nfr", "module": "shared_security", "priority": "mvp", "source_quote": "Audit logs for AI decisions", "acceptance_criteria_ids": [] },
+    { "id": "REQ-013", "statement": "No external exposure of sensitive employee data; public chatbot runs on a PII-free tenant.", "type": "constraint", "module": "shared_security", "priority": "mvp", "source_quote": "No exposure of sensitive employee data externally", "acceptance_criteria_ids": [] },
+    { "id": "REQ-014", "statement": "Explainability: every decision outputs why (citations / evidence_ref / rationale).", "type": "functional", "module": "shared_security", "priority": "mvp", "source_quote": "Every decision must output: Why this answer, Why this person/team", "acceptance_criteria_ids": ["AC-5"] },
+    { "id": "REQ-015", "statement": "Frontend provides a public chat widget, an internal feedback dashboard, and an internal team-assembly UI.", "type": "functional", "module": "frontend", "priority": "mvp", "source_quote": "Public: Chat widget; Internal: Feedback dashboard; Internal: Team assembly UI", "acceptance_criteria_ids": ["AC-5"] },
+    { "id": "REQ-016", "statement": "Team optimization (maximize skill coverage, collaboration probability, delivery success).", "type": "functional", "module": "team_assembler", "priority": "later", "source_quote": "Goal: Maximize skill coverage, collaboration probability, delivery success likelihood", "acceptance_criteria_ids": [] }
+  ],
+  "interface_contracts": {
+    "openapi_path": "system/contracts/openapi.yaml",
+    "shared_interfaces": [
+      { "name": "KnowledgeCore.semantic_search", "stub_path": "system/contracts/stubs/shared_interfaces.py", "signature": "semantic_search(query: str, domain_filter: DomainFilter, auth_ctx: AuthContext, k: int = 5) -> list[RetrievedChunk]" },
+      { "name": "EmbeddingService.embed", "stub_path": "system/contracts/stubs/shared_interfaces.py", "signature": "embed(texts: list[str]) -> list[Vector]  (EMBED_MODEL/EMBED_DIM pinned)" },
+      { "name": "EmployeeIntelligenceProfile", "stub_path": "system/contracts/stubs/shared_interfaces.py", "signature": "dataclass(employee_id, name, cv_text, skills, feedback_summary, project_history, availability)" },
+      { "name": "EmployeeRepository", "stub_path": "system/contracts/stubs/shared_interfaces.py", "signature": "get(employee_id, auth_ctx) -> EmployeeIntelligenceProfile | None ; list_candidates(auth_ctx, required_skills?) -> list[EmployeeIntelligenceProfile]" },
+      { "name": "FeedbackIntelligence", "stub_path": "system/contracts/stubs/shared_interfaces.py", "signature": "analyze(reviews, auth_ctx) -> FeedbackAnalysis (PERSISTS by employee_id) ; get(employee_id, auth_ctx) -> FeedbackAnalysis | None" },
+      { "name": "FeedbackAnalysis", "stub_path": "system/contracts/stubs/shared_interfaces.py", "signature": "dataclass(analysis_id, employee_id, feedback_score[0,1], sentiment[-1,1], strengths, weaknesses, risks, team_dynamics_signals, confidence_score)" },
+      { "name": "AuthContext", "stub_path": "system/contracts/stubs/shared_interfaces.py", "signature": "dataclass(principal_id, role, org, allowed_tenants, allowed_domains)" },
+      { "name": "build_auth_context", "stub_path": "system/contracts/stubs/shared_interfaces.py", "signature": "build_auth_context(bearer_token) -> AuthContext  (the ONLY token->AuthContext bridge)" },
+      { "name": "PUBLIC_AUTH_CONTEXT", "stub_path": "system/contracts/stubs/shared_interfaces.py", "signature": "AuthContext(allowed_tenants={'public'}, allowed_domains=PUBLIC_DOMAINS) — /chat/query MUST use exactly this (REQ-013)" },
+      { "name": "AuditRow", "stub_path": "system/contracts/stubs/shared_interfaces.py", "signature": "dataclass(trace_id, timestamp, principal_id, module, inputs_hash, retrieved_chunk_ids, prompt_version, model_version, output_ref, grounding_score, tenant)" },
+      { "name": "AuditSink", "stub_path": "system/contracts/stubs/shared_interfaces.py", "signature": "append(row: AuditRow) -> None  (append-only; no update/delete grants)" },
+      { "name": "accessors", "stub_path": "system/contracts/stubs/shared_interfaces.py", "signature": "get_knowledge_core() ; get_embedding_service() ; get_employee_repository() ; get_feedback_intelligence() ; get_audit_sink() — every module MUST call these (AC-4), not instantiate private impls" }
+    ]
+  },
+  "output_schemas": {
+    "rag_answer": "system/contracts/schemas/rag_answer.schema.json",
+    "feedback_analysis": "system/contracts/schemas/feedback_analysis.schema.json",
+    "team_assembly": "system/contracts/schemas/team_assembly.schema.json"
+  },
+  "acceptance_criteria": [
+    { "id": "AC-1", "description": "No hallucination: a substantive RAG answer carries >=1 citation whose source_id resolves to a chunk actually retrieved for the query; insufficient grounding => abstained=true. Proven by citation-resolution + a faithfulness judge (threshold 0.7) at the runtime gate.", "kind": "runtime", "verdict_on_fail": "automatic-fail", "modules": ["chatbot"] },
+    { "id": "AC-2", "description": "Not generic: every feedback item has an evidence_ref pointing at a real input review with a verbatim quote. Enforced as a human/LLM-judge signal, not a denylist.", "kind": "judge", "verdict_on_fail": "automatic-fail", "modules": ["feedback"] },
+    { "id": "AC-3", "description": "Behavioral data is used: every team member has a feedback_signal_ref to a real FeedbackIntelligence record; mutating a candidate's feedback changes their match_score/selection (corpus-mutation test).", "kind": "runtime", "verdict_on_fail": "automatic-fail", "modules": ["team_assembler"] },
+    { "id": "AC-4", "description": "Shared intelligence is used: every module imports the SAME KnowledgeCore + EmbeddingService (no private duplicate). Runtime proof: mutating the corpus changes chatbot answers (modules route through the one brain, not just import it).", "kind": "runtime", "verdict_on_fail": "automatic-fail", "modules": ["chatbot", "feedback", "team_assembler"] },
+    { "id": "AC-5", "description": "Explainability: every decision emits why (RAG citations, feedback evidence_ref, team rationale + feedback_signal_ref). A decision with no explanation field is invalid.", "kind": "static", "verdict_on_fail": "automatic-fail", "modules": ["chatbot", "feedback", "team_assembler", "frontend"] }
+  ],
+  "open_contract_proposals": [
+    { "by": "knowledge-core-builder", "change": "The frozen shared Protocols (KnowledgeCore.semantic_search, EmbeddingService.embed, EmployeeRepository.get/list_candidates, FeedbackIntelligence.analyze/get) are SYNC, but the app stack is async FastAPI/SQLAlchemy. The concrete impls satisfy the sync Protocols (isinstance checks pass) AND additionally expose *_async coroutine variants (get_async, list_candidates_async, analyze_async, get_async; EmbeddingService.embed and KnowledgeCore.semantic_search use sync httpx/weaviate clients so are safe to call from a threadpool). The sync wrappers raise if called from within a running event loop. RECOMMENDATION for Phase-2 worktrees: in async route handlers, await the *_async variants for the DB-backed services (employees/feedback), and call the sync semantic_search/embed via run_in_threadpool (FastAPI sync-route style or starlette.concurrency.run_in_threadpool) to avoid blocking the loop and to keep the chatbot <2s SLA. No signature change to the frozen Protocols is requested; this is an additive convention. File for the contract-lead's awareness.", "status": "accepted", "resolution": "Lead ACCEPTED — additive, no Protocol signature change, contract_version stays 1. Phase-2 convention: await the *_async DB methods; call sync semantic_search/embed via starlette.concurrency.run_in_threadpool. Shared credential-agnostic Claude client at app/llm (get_claude_client)." }
+  ],
+  "verify": {
+    "command": "make verify",
+    "tier1": ["compile/typecheck (ruff/mypy or pyright; tsc)", "lint (ruff; eslint)", "contract-validate (jsonschema + schemathesis vs openapi.yaml)", "boot (uvicorn / vite build)", "smoke (health + one happy-path; feature modules hit the REAL knowledge_core)"],
+    "tier2": ["LLM/judge grounding & rationale review, gated behind tier1-green, hard attempt cap 5, best-so-far checkpoint"]
+  },
+  "glossary": {
+    "grounding_threshold": "0.7 — faithfulness/groundedness score in [0,1]; below this OR no supporting retrieved chunk => abstain (abstained=true, ask for clarification, never guess).",
+    "abstain_semantics": "abstained=true with a clarification-seeking answer; citations may be empty; counts as a PASS for AC-1 (abstaining is correct, hallucinating is not).",
+    "rbac_tenants": "Weaviate tenants: 'public' (PII-free: company/website/case-studies/job-openings only) and 'internal:<org>' (employee profiles, feedback, reviews). The public chatbot is restricted to the 'public' tenant.",
+    "roles": "public | candidate | employee | manager | admin. semantic_search requires auth_ctx mapping the principal to allowed tenants/domains; retrieval cannot return data outside them.",
+    "domains": "company | case_studies | job_openings | employee_profiles | feedback | project_requirements (per the spec Data Domains table).",
+    "intent_domains": "client -> {company, case_studies}; candidate -> {job_openings, company}; unknown -> {company, case_studies, job_openings}. All within the public PII-free set (see shared_interfaces.INTENT_DOMAINS).",
+    "embedding": "EMBED_MODEL='sentence-transformers/all-MiniLM-L6-v2', EMBED_DIM=384 — ONE local model across all modules (in-VPC, GDPR; no external embedding API). Pinned in shared_interfaces.py.",
+    "feedback_score_formula": "Deterministic [0,1]: start 0.5; +0.08 per strength, -0.06 per weakness, - risk_penalty {low:0.05, medium:0.10, high:0.20} per risk; clamp[0,1]. Deterministic so AC-3 corpus-mutation moves it; distinct from confidence_score.",
+    "match_score_range": "All scores (match_score, confidence, confidence_score, feedback_score, grounding_score) are in [0,1]; sentiment in [-1,1]. Pinned here (JSON Schemas omit numeric bounds to stay structured-output-safe).",
+    "seed_corpus": "system/seed/ holds a committed minimal corpus: employees.json (>=6 with ids E001.., skills, availability), reviews.json (peer/manager/self per employee with ids R001..), company/case-study/job docs for the public tenant, and project_requirements samples. AC-3/AC-4 mutation tests mutate THIS deterministic corpus.",
+    "review_pause": "After this freeze, fan-out is BLOCKED until human/second-agent review of the contract."
+  }
+}

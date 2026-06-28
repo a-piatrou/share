@@ -1,0 +1,50 @@
+[
+  {
+    "doc_id": "DOC-COMPANY-001",
+    "domain": "company",
+    "title": "About GHOSTWIRE Consulting",
+    "text": "GHOSTWIRE is a software consultancy that helps companies build AI-powered products. We specialise in retrieval-augmented generation, data platforms, and cloud-native backends on Google Cloud. Our teams pair senior engineers with product managers to ship measurable outcomes, not just code. We work in small, accountable squads and emphasise grounded, explainable AI that clients can trust."
+  },
+  {
+    "doc_id": "DOC-COMPANY-002",
+    "domain": "company",
+    "title": "How GHOSTWIRE Works With Clients",
+    "text": "Engagements begin with a short discovery phase where we map your goals to a scoped plan. We then assemble a cross-functional team matched to your needs and deliver in two-week iterations with transparent progress reporting. Every engagement includes a clear definition of done and a handover so your team can own the result. We are GDPR-conscious by default and keep sensitive data inside your environment."
+  },
+  {
+    "doc_id": "DOC-CASE-001",
+    "domain": "case_studies",
+    "title": "Case Study: Fintech Search Platform",
+    "text": "A fintech client needed fast, accurate search across millions of financial documents. GHOSTWIRE designed a FastAPI and PostgreSQL backend with a hybrid vector search layer, cutting median query latency in half and improving answer relevance. The grounded retrieval design meant every answer cited its source, which was essential for the client's compliance team."
+  },
+  {
+    "doc_id": "DOC-CASE-002",
+    "domain": "case_studies",
+    "title": "Case Study: Customer Support Assistant",
+    "text": "A SaaS company wanted a support assistant that never invented answers. We built a retrieval-augmented assistant with a faithfulness evaluation harness that abstains when context is insufficient. Groundedness scores rose above target and escalation rates dropped, because the assistant asked clarifying questions instead of guessing."
+  },
+  {
+    "doc_id": "DOC-CASE-003",
+    "domain": "case_studies",
+    "title": "Case Study: Cloud Migration to GCP",
+    "text": "A scale-up was struggling with a fragile monolith. GHOSTWIRE migrated it to Cloud Run with a private-IP Cloud SQL database and a Terraform-managed platform. Deployments became reproducible, costs dropped through scale-to-zero, and the security posture improved with least-privilege IAM and no public database endpoints."
+  },
+  {
+    "doc_id": "DOC-JOB-001",
+    "domain": "job_openings",
+    "title": "Open Role: Senior Backend Engineer",
+    "text": "We are hiring a senior backend engineer to build AI-powered services in Python with FastAPI and PostgreSQL. You will design APIs, work on retrieval pipelines, and care about reliability and clean contracts. Experience with async Python and vector databases is a strong plus. Remote-friendly within EU timezones."
+  },
+  {
+    "doc_id": "DOC-JOB-002",
+    "domain": "job_openings",
+    "title": "Open Role: Frontend Engineer",
+    "text": "We are looking for a frontend engineer fluent in React and TypeScript to build polished, accessible product interfaces. You will work with Vite, Tailwind, and a shared component library, partnering closely with design and backend engineers. We value craft, accessibility, and pragmatic shipping."
+  },
+  {
+    "doc_id": "DOC-JOB-003",
+    "domain": "job_openings",
+    "title": "Open Role: Applied ML Engineer",
+    "text": "Join us as an applied ML engineer focused on NLP and retrieval-augmented generation. You will build embedding pipelines, tune hybrid search, and own groundedness evaluation. We care about measurable quality and shipping models that abstain rather than hallucinate. EU-remote with occasional travel."
+  }
+]
